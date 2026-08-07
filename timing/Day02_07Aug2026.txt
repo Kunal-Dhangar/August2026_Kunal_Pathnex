@@ -1,0 +1,7 @@
+3  Hours --> Online session
+2 Hours ---> Learn the Tools and how they are used in Devops
+1 Hours ---> Coding Practice
+2 Hoours --> EC2 Install
+1 Hour---> English Paractice
+
+
