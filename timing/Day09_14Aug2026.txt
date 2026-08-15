@@ -1,0 +1,13 @@
+ 
+
+
+ 3Hours ---> session
+ 
+ 2 hr------> kubernetes setup
+ 
+ 1 hr -----> english communication 
+
+ 2 hr -----> Docker Parctice
+
+ 1 hr -----> aws services reading 
+
