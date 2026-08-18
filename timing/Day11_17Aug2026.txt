@@ -1,0 +1,8 @@
+ 3 Hours--> Moring session
+
+ 3 Hours --> Kubernetes Practice
+
+ 1 hour --> Comminu=ication
+
+ 2 Hour --> Jenkins learning 
+
