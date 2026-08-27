@@ -1,0 +1,85 @@
+
+=============Ansible Fixed====================
+
+- name: Install Stuff
+  hosts: all
+  become: true
+  tasks: 
+    - name: Install apache
+      yum:
+        name:httpd
+	state: present
+
+
+=========== Terraform --Fixed===============
+ resource "aws_instance" "Bad" {
+     ami     = "ami-123"
+     instance_type = "c6i.8xlerge"
+ }
+
+
+=========== Kubernetes -- Fixed =============
+
+apiVersion: app/v1
+kind :Deployment
+metadata:
+  name: broken-app
+spec:
+  replicas:3
+  selector:
+    matchlabels;
+        app: broken
+  template:
+    metadata:
+      labels:
+        app: broken
+    spec:
+      containers:
+        - name: app
+          image: nginx
+
+============== jenkins Pipeline --- Secure credentials========
+
+pipeline {
+    agent any
+
+    environment {
+        INSTITUTE_NAME = "Pathnex"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/Pathnex/sample-java-app.git'
+            }
+        }
+
+        stage('Use Secret') {
+            steps {
+                withCredentials([
+                    string(
+                        credentialsId: 'PATHNEX_API_KEY',
+                        variable: 'API_KEY'
+                    )]) {
+                    sh 'echo "Using secret $API_KEY for $INSTITUTE_NAME"'
+                }
+            }
+        }
+    }
+}
+
+
+================ Gitlab CI -- Secure CI/CD Variable================
+
+stages:
+  - build
+
+variables:
+  INSTITUTE_NAME: "Pathnex"
+
+build:
+  stage: build
+  image: alpine:latest
+  script:
+    - echo "Using API key for $INSTITUTE_NAME"
+    - echo "API key is available as a CI/CD variable"
