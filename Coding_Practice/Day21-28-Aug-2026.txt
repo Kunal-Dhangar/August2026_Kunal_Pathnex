@@ -1,0 +1,154 @@
+
+
+======================= DAY 21=========================
+
+======== Ansible -- Install Nginx + Start and Enable=========
+
+---
+ - name: Install and configure Nginx
+   hosts: all
+   become:yes
+
+   tasks:
+      - name: Install Nginx
+        package: 
+	   name: nginx
+	   state: present
+
+
+      - name: Start and enable Nginx
+
+        service:
+	  name: nginx
+	  state: started
+	  enabled: yes
+
+======= Terraform -- Create EC2 with Owner Tag ===========
+
+terraform{
+    required_providers{
+       aws = {
+         sources = "hashicorp/aws"
+	 version = "~>6.0"
+       }
+    }
+
+}
+
+provider "aws" {
+   region = "ap-south-1"
+}
+
+resources "aws_instance" "devops_server" {
+  ami     = "ami-xxxxxxxxxxxxxx"
+  instance_type ="c5.xlarge"
+
+  tags = {
+     Name ="pathnex-Devops-Server"
+     Owner = "PathnexStudent"
+  }
+}
+
+
+======== Kubernetes -- Nginx Deployment with 3 Replicas =======
+
+apiVersion :app/v1
+kind: Deployment
+
+metadata:
+  name: nginx-deploymnet
+
+spec:
+  replicas: 3
+  
+  selector:
+    matchlabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+        - name: nginx
+	  image: nginx
+	  ports:
+	    - containerPort: 80
+========== Shell -- Date ,uptime and Disk Usage =======
+
+#!/bin/bash
+
+echo "======= Syastem Information =========="
+
+echo "Date:"
+date
+
+echo "Uptime:"
+uptime
+
+echo "Disk Usage"
+df -h
+
+======== Jenkins -- Multi- Environment Pipeline ======
+
+pipeline{
+  agent any
+
+  environment{
+    INSTITUTE_NAME = "Pathnex"
+
+  }
+
+  stages{
+    
+     stage('Deploy To Dev"){
+         steps{
+            sh 'echo "Deploying $INSTITUTE_NAME to Dev environment" '
+	 }
+     }
+
+     stage('Deploy to Staging'){
+         steps{
+            input message : 'Approve staging Deployment'
+	    sh 'echo "Deploying $INSTITUTE_NAME to Staging Environment" '
+	 }
+     }
+
+     stage('Deploy to Production'){
+        steps{
+           input message : 'Approve Production Deployment '
+	   sh 'echo "Deployment to $INSTITUTE_NAME to Production environment" '
+	}
+     }
+
+  }
+}
+
+====== GitLab CI -- Multi- Environment ============
+
+stages:
+  - deploy
+
+variables:
+   INSTITUTE_NAME: "Pathnex"
+
+deploy-dev:
+   stage:deploy
+   image: alpine:latest
+   script:
+     - echo "Deploying $INSTITUTE_NAME TO dev Environment"
+deploy-staging"
+   state: deploy
+   image: alpine:latest
+   script:
+      - echo "Deplyong $INSTITUTE_NAME to Staging environment"
+   when: manual
+
+deploy-prod:
+   stage: deploy
+   image: alpine:latest
+   script:
+     - echo "Deploying $INSTITUTE_NAME TO PRODUCTION Environment"
+   when: manual
+
+===================================================================== 

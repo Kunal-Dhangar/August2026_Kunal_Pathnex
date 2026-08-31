@@ -1,0 +1,11 @@
+
+
+4 ---> Morning session
+
+2 ---> terraform Practice
+
+2 ----> kubernetes Practical
+
+1 ----> English Communication
+
+
