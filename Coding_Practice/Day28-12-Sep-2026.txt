@@ -1,0 +1,98 @@
+
+
+================= Broken Day ==================
+
+===== Ansible ---> Broken Fixed========
+
+---
+- name: Install nginx
+  hosts: all
+  become: yes
+
+
+  tasks:
+     - name: Install nginx
+       yum:
+         name: nginx
+	 state: present
+
+
+
+=======Terraform -- Broken Fixed ========
+
+
+resource "aws_s3_bucket" "bad_bucket" {
+   bucket = "pathnex-bucket"
+}
+
+
+========= Kubernets -- Broken Fixed ======
+
+apiVersion: v1
+kind : pod
+
+metadata:
+   name: brokenPod
+
+spec:
+   containers:
+     - name: app
+       image: nginx
+
+
+============ Jenkins Autimatic Rollback ============
+
+pipeline{
+
+   agent any
+    
+   environment{
+      INSTITUTE_NAME = "Pathnex"
+
+      TEAM = "Devops"
+
+      ENV = "prod"
+      
+   }
+
+   stages{
+      stage('Deploy'){
+            steps{
+               script{
+                  try{
+                      sh 'echo "deploying  $INSTITUTE_NAME app in $ENV for $TEAM"'
+                        sh 'exit 1'
+                    } catch (Exception e) {
+                        echo "Deployment failed. Rolling back..."
+
+                        sh 'kubectl rollout undo deployment/my-app'
+                    }
+
+		  }
+	       }
+	    }
+      }
+
+   }
+}
+
+=============== Gitlab -->automatic RollBack ===========
+
+stages:
+  - deploy
+
+variables:
+  INSTITUTE_NAME: "Pathnex"
+  TEAM: "DevOps"
+  ENV: "prod"
+
+deploy:
+  stage: deploy
+  image: alpine:latest
+
+  script:
+    - echo "Deploying $INSTITUTE_NAME app in $ENV for $TEAM"
+    - exit 1
+
+  after_script:
+    - echo "Deployment failed. Rolling back $INSTITUTE_NAME app in $ENV"
